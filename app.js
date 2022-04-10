@@ -37,6 +37,12 @@ function render() {
   todo.forEach(function (todo) {
     const element = document.createElement("div"); // creates html element
     element.innerText = todo.title + "" + todo.dueDate; //it takes our div and it sets the text inside the div to be the value of todo1
+
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Delete";
+    deleteButton.style = "margin-left: 12px";
+    element.appendChild(deleteButton);
+
     const todoList = document.getElementById("todo-list");
     todoList.appendChild(element); // adds an element to the end of the body
   });
