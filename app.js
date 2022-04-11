@@ -1,16 +1,19 @@
 "use strict";
-const todo = [
+let todo = [
   {
     title: "Get groceries",
     dueDate: "2022-05-11",
+    id: "id1",
   },
   {
     title: "Wash car",
     dueDate: "2022-07-01",
+    id: "id2",
   },
   {
     title: "Get groceries",
     dueDate: "2022-04-21",
+    id: "id3",
   },
 ];
 
@@ -22,9 +25,29 @@ function addTodo() {
 
   const datePicker = document.getElementById("date-picker");
   const dueDate = datePicker.value;
+
+  const id = new Date().getTime(); // it gets the current time in milliseconds
   todo.push({
     title: title,
     dueDate: dueDate,
+    id: id,
+  });
+
+  render();
+}
+
+function deleteTodo(event) {
+  const deleteButton = event.target;
+  const idToDelete = deleteButton.id;
+
+  todo = todo.filter(function (todos) {
+    // if the id of this matches idToDelete, return false
+    // for everything else - return true
+    if (todos.id === idToDelete) {
+      return false;
+    } else {
+      return true;
+    }
   });
 
   render();
@@ -42,7 +65,8 @@ function render() {
     deleteButton.innerText = "Delete";
     deleteButton.style = "margin-left: 12px";
     element.appendChild(deleteButton);
-
+    deleteButton.onclick = deleteTodo;
+    deleteButton.id = todo.id;
     const todoList = document.getElementById("todo-list");
     todoList.appendChild(element); // adds an element to the end of the body
   });
