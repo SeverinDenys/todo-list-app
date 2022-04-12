@@ -1,45 +1,47 @@
 "use strict";
-let todo = [
-  {
-    title: "Get groceries",
-    dueDate: "2022-05-11",
-    id: "id1",
-  },
-  {
-    title: "Wash car",
-    dueDate: "2022-07-01",
-    id: "id2",
-  },
-  {
-    title: "Get groceries",
-    dueDate: "2022-04-21",
-    id: "id3",
-  },
-];
+// model section
+// if a local storage has a todos array, then use it
+// Otherwise use the default array
+let todo;
 
-render();
+// retrieve localStorage
+const savedTodo = JSON.parse(localStorage.getItem("todo"));
+// check if it's an array
+if (Array.isArray(savedTodo)) {
+  todo = savedTodo;
+} else {
+  todo = [
+    {
+      title: "Get groceries",
+      dueDate: "2022-05-11",
+      id: "id1",
+    },
+    {
+      title: "Wash car",
+      dueDate: "2022-07-01",
+      id: "id2",
+    },
+    {
+      title: "Get groceries",
+      dueDate: "2022-04-21",
+      id: "id3",
+    },
+  ];
+}
 
-function addTodo() {
-  const textBox = document.getElementById("todo-title"); // tells to get an html element by Id
-  const title = textBox.value; // to get the data we've typed out of textBox
-
-  const datePicker = document.getElementById("date-picker");
-  const dueDate = datePicker.value;
-
-  const id = new Date().getTime(); // it gets the current time in milliseconds
+// creates a todo
+function createTodo(title, dueDate) {
+  const id = "" + new Date().getTime(); // it gets the current time in milliseconds + transforms the result into the string by using ''
   todo.push({
     title: title,
     dueDate: dueDate,
     id: id,
   });
 
-  render();
+  saveTodos();
 }
-
-function deleteTodo(event) {
-  const deleteButton = event.target;
-  const idToDelete = deleteButton.id;
-
+// deletes a todo
+function removeTodo(idToDelete) {
   todo = todo.filter(function (todos) {
     // if the id of this matches idToDelete, return false
     // for everything else - return true
@@ -49,9 +51,37 @@ function deleteTodo(event) {
       return true;
     }
   });
+  saveTodos();
+}
+
+function saveTodos() {
+  localStorage.setItem("todo", JSON.stringify(todo));
+}
+
+render();
+
+//controller section
+function addTodo() {
+  const textBox = document.getElementById("todo-title"); // tells to get an html element by Id
+  const title = textBox.value; // to get the data we've typed out of textBox
+
+  const datePicker = document.getElementById("date-picker");
+  const dueDate = datePicker.value;
+
+  createTodo(title, dueDate);
 
   render();
 }
+
+function deleteTodo(event) {
+  const deleteButton = event.target;
+  const idToDelete = deleteButton.id;
+
+  removeTodo(idToDelete);
+  render();
+}
+
+//view section
 
 function render() {
   //reset our list
